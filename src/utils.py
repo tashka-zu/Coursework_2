@@ -4,7 +4,7 @@ from src.classes_vacancy import JSONFileWorker
 
 
 def convert_to_vacancy_objects(vacancies_data):
-    """Преобразует список словарей в список объектов Vacancy."""
+    """Преобразует список словарей в список объектов Vacancy"""
     vacancies = []
     for vacancy_data in vacancies_data:
         salary = None
@@ -22,6 +22,7 @@ def convert_to_vacancy_objects(vacancies_data):
 
 
 def user_interaction():
+    """Основная функция для взаимодействия с пользователем"""
     file_worker = JSONFileWorker()
     hh = HH(file_worker)
 
@@ -42,7 +43,7 @@ def user_interaction():
 
 
 def filter_vacancies(vacancies, filter_words):
-    """Фильтрует вакансии по ключевым словам в описании."""
+    """Фильтрует вакансии по ключевым словам в описании"""
     return [
         vacancy for vacancy in vacancies
         if vacancy.description and any(word.lower() in vacancy.description.lower() for word in filter_words)
@@ -50,7 +51,7 @@ def filter_vacancies(vacancies, filter_words):
 
 
 def get_vacancies_by_salary(vacancies, salary_range):
-    """Фильтрует вакансии по зарплате в заданном диапазоне."""
+    """Фильтрует вакансии по зарплате в заданном диапазоне"""
     if not salary_range:
         return vacancies
 
@@ -72,7 +73,7 @@ def get_vacancies_by_salary(vacancies, salary_range):
 
 
 def sort_vacancies(vacancies):
-    """Сортирует вакансии по зарплате."""
+    """Сортирует вакансии по зарплате"""
     def get_salary_value(vacancy):
         if isinstance(vacancy.salary, int):
             return vacancy.salary
@@ -88,12 +89,12 @@ def sort_vacancies(vacancies):
 
 
 def get_top_vacancies(vacancies, top_n):
-    """Возвращает топ N вакансий."""
+    """Возвращает топ N вакансий"""
     return vacancies[:top_n]
 
 
 def print_vacancies(vacancies):
-    """Выводит информацию о вакансиях."""
+    """Выводит информацию о вакансиях"""
     for vacancy in vacancies:
         print(f"Название: {vacancy.title}")
         print(f"Ссылка: {vacancy.url}")
