@@ -1,6 +1,5 @@
 from src.api_code import HH
-from src.classes_vacancy import Vacancy
-from src.classes_vacancy import JSONFileWorker
+from src.classes_vacancy import JSONFileWorker, Vacancy
 
 
 def convert_to_vacancy_objects(vacancies_data):
@@ -8,14 +7,14 @@ def convert_to_vacancy_objects(vacancies_data):
     vacancies = []
     for vacancy_data in vacancies_data:
         salary = None
-        if 'salary' in vacancy_data and vacancy_data['salary']:
-            salary = vacancy_data['salary'].get('from', None)
+        if "salary" in vacancy_data and vacancy_data["salary"]:
+            salary = vacancy_data["salary"].get("from", None)
 
         vacancy = Vacancy(
-            title=vacancy_data.get('name', ''),
-            url=vacancy_data.get('alternate_url', ''),
+            title=vacancy_data.get("name", ""),
+            url=vacancy_data.get("alternate_url", ""),
             salary=salary,
-            description=vacancy_data.get('snippet', {}).get('responsibility', '')
+            description=vacancy_data.get("snippet", {}).get("responsibility", ""),
         )
         vacancies.append(vacancy)
     return vacancies
@@ -45,7 +44,8 @@ def user_interaction():
 def filter_vacancies(vacancies, filter_words):
     """Фильтрует вакансии по ключевым словам в описании"""
     return [
-        vacancy for vacancy in vacancies
+        vacancy
+        for vacancy in vacancies
         if vacancy.description and any(word.lower() in vacancy.description.lower() for word in filter_words)
     ]
 
@@ -55,16 +55,16 @@ def get_vacancies_by_salary(vacancies, salary_range):
     if not salary_range:
         return vacancies
 
-    min_salary, max_salary = map(int, salary_range.split('-'))
+    min_salary, max_salary = map(int, salary_range.split("-"))
 
     def is_salary_in_range(vacancy):
-        if vacancy.salary is None or isinstance(vacancy.salary, str) and 'не указана' in vacancy.salary.lower():
+        if vacancy.salary is None or isinstance(vacancy.salary, str) and "не указана" in vacancy.salary.lower():
             return False
         try:
             if isinstance(vacancy.salary, int):
                 salary_value = vacancy.salary
             else:
-                salary_value = int(vacancy.salary.split('-')[0].replace(' ', ''))
+                salary_value = int(vacancy.salary.split("-")[0].replace(" ", ""))
             return min_salary <= salary_value <= max_salary
         except ValueError:
             return False
@@ -74,14 +74,15 @@ def get_vacancies_by_salary(vacancies, salary_range):
 
 def sort_vacancies(vacancies):
     """Сортирует вакансии по зарплате"""
+
     def get_salary_value(vacancy):
         if isinstance(vacancy.salary, int):
             return vacancy.salary
-        elif isinstance(vacancy.salary, str) and 'не указана' in vacancy.salary.lower():
+        elif isinstance(vacancy.salary, str) and "не указана" in vacancy.salary.lower():
             return 0
         else:
             try:
-                return int(vacancy.salary.split('-')[0].replace(' ', ''))
+                return int(vacancy.salary.split("-")[0].replace(" ", ""))
             except ValueError:
                 return 0
 
